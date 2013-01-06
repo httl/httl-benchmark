@@ -57,7 +57,7 @@ public class PerformanceTest {
             System.out.println("init: " + counter.getInitialized() + "ms, " +
             		"compile: " + counter.getCompiled() + "ms, " +
             		"first: " + counter.getExecuted() + "ms/" + writer.getBuffer().length() + "byte, " +
-            		"total: " + counter.getFinished() + "ms/" + count + ", " +
+            		"total: " + counter.getFinished() + "ms" + ", " +
             		"tps: " + (counter.getFinished() == 0 ? 0L : (1000L * count / counter.getFinished())) + "/s.");
         }
     }
