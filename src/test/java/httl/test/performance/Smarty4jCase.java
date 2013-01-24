@@ -17,6 +17,8 @@
 package httl.test.performance;
 
 import java.io.File;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Map;
 
@@ -31,7 +33,7 @@ import org.lilystudio.smarty4j.Template;
  */
 public class Smarty4jCase implements Case {
 
-    public void count(Counter counter, int times, String name, Map<String, Object> map, Writer writer, Writer discardWriter) throws Exception {
+    public void count(Counter counter, int times, String name, Map<String, Object> map, Object out) throws Exception {
         String path = "/" + name + ".st";
     	Context context = new Context();
         context.putAll(map);
@@ -43,10 +45,13 @@ public class Smarty4jCase implements Case {
         counter.initialized();
         Template template = engine.getTemplate(path);
         counter.compiled();
-        template.merge(context, writer);
+        if (out instanceof OutputStream) {
+        	out = new OutputStreamWriter((OutputStream) out);
+        }
+        template.merge(context, (Writer) out);
         counter.executed();
 		for (int i = times; i >= 0; i--) {
-			engine.getTemplate(path).merge(context, discardWriter);
+			engine.getTemplate(path).merge(context, (Writer) out);
 		}
         counter.finished();
     }

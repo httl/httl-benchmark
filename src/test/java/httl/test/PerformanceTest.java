@@ -10,9 +10,9 @@ import httl.test.performance.HttlCase;
 import httl.test.performance.JavaCase;
 import httl.test.performance.Smarty4jCase;
 import httl.test.performance.VelocityCase;
+import httl.test.util.DiscardOutputStream;
 import httl.test.util.DiscardWriter;
 
-import java.io.StringWriter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +27,7 @@ public class PerformanceTest {
     public void testPerformance() throws Exception {
     	int count = getProperty("count", 10000);
         int list = getProperty("list", 100);
+        boolean stream = "true".equals(System.getProperty("stream"));
         Random random = new Random();
         Book[] books = new Book[list];
         for (int i = 0; i < list; i ++) {
@@ -42,21 +43,20 @@ public class PerformanceTest {
         		+ ", total: " + Runtime.getRuntime().totalMemory() + ", free: " + Runtime.getRuntime().freeMemory() 
         		+ ", use: " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));
         System.out.println("=======test parameters========");
-        System.out.println("count: " + count + ", list: " + list);
+        System.out.println("count: " + count + ", list: " + list + ", stream: " + stream);
         for (int i = 0; i < cases.length; i ++) {
         	Case c = cases[i];
         	String name = c.getClass().getSimpleName().replace("Case", "");
             System.out.println("========" + name.toLowerCase() + "========");
             Counter counter = new Counter();
-            StringWriter writer = new StringWriter();
             // 当开启stream模式后，假设你的原生输出为byte[]流输出，比如HTTP的响应流。
             // 这样Writer实际是包装流的，所有输出String都需要编码成byte[]流，下面使用StreamWriter模拟。
             // 否则将不公平，因为httl会将静态文本编译byte[]，并为动态插值增加getBytes()。
             // 这个getBytes()实际是将Writer的转码提前了，是会增加开销的，但会减少Writer的开销。
-            c.count(counter, count, "books", new HashMap<String, Object>(context), writer, new DiscardWriter());
+            c.count(counter, count, "books", new HashMap<String, Object>(context), stream ? new DiscardOutputStream() : new DiscardWriter());
             System.out.println("init: " + counter.getInitialized() + "ms, " +
             		"compile: " + counter.getCompiled() + "ms, " +
-            		"first: " + counter.getExecuted() + "ms/" + writer.getBuffer().length() + "byte, " +
+            		"first: " + counter.getExecuted() + "ms, " +
             		"total: " + counter.getFinished() + "ms" + ", " +
             		"tps: " + (counter.getFinished() == 0 ? 0L : (1000L * count / counter.getFinished())) + "/s.");
         }

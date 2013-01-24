@@ -159,6 +159,10 @@
 							<name>list</name>
 							<value>${list}</value>
 						</property>
+						<property>
+							<name>stream</name>
+							<value>${stream}</value>
+						</property>
 					</systemProperties>
 				</configuration>
 			</plugin>

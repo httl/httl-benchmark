@@ -36,7 +36,7 @@ public class ShowTest {
             String name = c.getClass().getSimpleName().replace("Case", "");
         	Counter counter = new Counter();
             StringWriter writer = new StringWriter();
-            c.count(counter, 1, "books", new HashMap<String, Object>(context), writer, new DiscardWriter());
+            c.count(counter, 1, "books", new HashMap<String, Object>(context), new DiscardWriter());
             System.out.println("========" + name.toLowerCase() + "========");
             System.out.println(writer.getBuffer().toString());
             System.out.println("================");

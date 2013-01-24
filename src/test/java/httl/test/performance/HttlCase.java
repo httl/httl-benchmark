@@ -19,7 +19,6 @@ package httl.test.performance;
 import httl.Engine;
 import httl.Template;
 
-import java.io.Writer;
 import java.util.Map;
 
 /**
@@ -29,17 +28,17 @@ import java.util.Map;
  */
 public class HttlCase implements Case {
 
-    public void count(Counter counter, int times, String name, Map<String, Object> context, Writer writer, Writer discardWriter) throws Exception {
+    public void count(Counter counter, int times, String name, Map<String, Object> context, Object out) throws Exception {
     	String path = "performance/" + name + ".httl";
         counter.beginning();
         Engine engine = Engine.getEngine();
         counter.initialized();
         Template template = engine.getTemplate(path);
         counter.compiled();
-        template.render(context, writer);
+        template.render(context, out);
         counter.executed();
 		for (int i = times; i >= 0; i--) {
-			engine.getTemplate(path).render(context, discardWriter);
+			engine.getTemplate(path).render(context, out);
 		}
         counter.finished();
     }

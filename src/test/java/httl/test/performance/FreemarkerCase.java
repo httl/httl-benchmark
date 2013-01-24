@@ -16,6 +16,8 @@
  */
 package httl.test.performance;
 
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Map;
 
@@ -30,7 +32,7 @@ import freemarker.template.Template;
  */
 public class FreemarkerCase implements Case {
 
-    public void count(Counter counter, int times, String name, Map<String, Object> context, Writer writer, Writer discardWriter) throws Exception {
+    public void count(Counter counter, int times, String name, Map<String, Object> context, Object out) throws Exception {
         String path = "performance/" + name + ".ftl";
     	counter.beginning();
         Configuration configuration = new Configuration();
@@ -38,10 +40,13 @@ public class FreemarkerCase implements Case {
         counter.initialized();
         Template template = configuration.getTemplate(path);
         counter.compiled();
-        template.process(context, writer);
+        if (out instanceof OutputStream) {
+        	out = new OutputStreamWriter((OutputStream) out);
+        }
+        template.process(context, (Writer) out);
         counter.executed();
         for (int i = times; i >= 0; i --) {
-        	configuration.getTemplate(path).process(context, discardWriter);
+        	configuration.getTemplate(path).process(context, (Writer) out);
         }
         counter.finished();
     }
