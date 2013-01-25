@@ -36,7 +36,7 @@ public class BeetlCase implements BenchmarkCase {
 		group.enableOptimize();
 		group.enableNativeCall();
 		counter.initialized();
-		Template template = group.getReaderTemplate(new InputStreamReader(BeetlCase.class.getClassLoader().getResourceAsStream("templates/books.btl"))); 
+		Template template = group.getReaderTemplate(new InputStreamReader(BeetlCase.class.getClassLoader().getResourceAsStream(name))); 
 		for (Map.Entry<String, Object> entry : context.entrySet()) {
 			template.set(entry.getKey(), entry.getValue());
 		}
