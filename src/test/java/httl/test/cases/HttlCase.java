@@ -37,9 +37,9 @@ public class HttlCase implements BenchmarkCase {
 		Engine engine = Engine.getEngine();
 		counter.initialized();
 		Template template = engine.getTemplate(name);
-		counter.compiled();
+		counter.parsed();
 		template.render(context, out);
-		counter.executed();
+		counter.firsted();
 		for (int i = times; i >= 0; i--) {
 			engine.getTemplate(name).render(context, out);
 		}

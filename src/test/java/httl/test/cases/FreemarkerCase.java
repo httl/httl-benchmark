@@ -45,9 +45,9 @@ public class FreemarkerCase implements BenchmarkCase {
 		configuration.setTemplateLoader(new ClassTemplateLoader(FreemarkerCase.class, "/"));
 		counter.initialized();
 		Template template = configuration.getTemplate(name);
-		counter.compiled();
+		counter.parsed();
 		template.process(context, (Writer) out);
-		counter.executed();
+		counter.firsted();
 		for (int i = times; i >= 0; i --) {
 			configuration.getTemplate(name).process(context, (Writer) out);
 		}

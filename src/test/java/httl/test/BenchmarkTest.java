@@ -47,6 +47,7 @@ public class BenchmarkTest {
 		int count = getProperty("count", 10000);
 		int list = getProperty("list", 100);
 		boolean stream = "true".equals(System.getProperty("stream"));
+		int width = Math.max(String.valueOf(count).length(), 6);
 		Random random = new Random();
 		Book[] books = new Book[list];
 		for (int i = 0; i < list; i ++) {
@@ -56,25 +57,51 @@ public class BenchmarkTest {
 		context.put("user", new User("liangfei", "admin", "Y"));
 		context.put("books", books);
 		BenchmarkCase[] cases = new BenchmarkCase[] { new BeetlCase(), new Smarty4jCase(), new FreemarkerCase(), new VelocityCase(), new HttlCase(), new JavaCase() };
-		System.out.println("=======test environment========");
+		int max = 6;
+		for (int i = 0; i < cases.length; i ++) {
+			BenchmarkCase c = cases[i];
+			max = Math.max(max, c.getClass().getSimpleName().replace("Case", "").length());
+		}
+		System.out.println("====================test environment=====================");
 		System.out.println("os: " + System.getProperty("os.name") + " " + System.getProperty("os.version") + " "+ System.getProperty("os.arch")
-				+ ", cpu: " + Runtime.getRuntime().availableProcessors() + " cores, jvm: " + System.getProperty("java.version") + ", \nmemory: max: " + Runtime.getRuntime().maxMemory() 
-				+ ", total: " + Runtime.getRuntime().totalMemory() + ", free: " + Runtime.getRuntime().freeMemory() 
-				+ ", use: " + (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()));
-		System.out.println("=======test parameters========");
+				+ ", cpu: " + Runtime.getRuntime().availableProcessors() + " cores, jvm: " + System.getProperty("java.version") + ", \nmem: max: " 
+				+ (Runtime.getRuntime().maxMemory()  / 1024 / 1024) 
+				+ "M, total: " + (Runtime.getRuntime().totalMemory() / 1024 / 1024) 
+				+ "M, free: " + (Runtime.getRuntime().freeMemory()  / 1024 / 1024)
+				+ "M, use: " + (Runtime.getRuntime().totalMemory() / 1024 / 1024 - Runtime.getRuntime().freeMemory() / 1024 / 1024) + "M");
+		System.out.println("====================test parameters======================");
 		System.out.println("count: " + count + ", list: " + list + ", stream: " + stream);
+		System.out.println("====================test result==========================");
+		System.out.println(padding("engine", max) + ",   " + " init,  " + "parse,  " + "first,  " + padding("total", width) + ",  " + "   tps,");
 		for (int i = 0; i < cases.length; i ++) {
 			BenchmarkCase c = cases[i];
 			String name = c.getClass().getSimpleName().replace("Case", "");
-			System.out.println("========" + name.toLowerCase() + "========");
 			BenchmarkCounter counter = new BenchmarkCounter();
 			c.execute(counter, count, "/httl/test/templates/books", context, stream ? new DiscardOutputStream() : new DiscardWriter());
-			System.out.println("init: " + counter.getInitialized() + "ms, " +
-					"compile: " + counter.getCompiled() + "ms, " +
-					"first: " + counter.getExecuted() + "ms, " +
-					"total: " + counter.getFinished() + "ms" + ", " +
-					"tps: " + (counter.getFinished() == 0 ? 0L : (1000L * count / counter.getFinished())) + "/s.");
+			System.out.println(padding(name.toLowerCase(), max) + ", " 
+					+ padding(counter.getInitialized(), 5) + "ms,"
+					+ padding(counter.getParsed(), 5) + "ms,"
+					+ padding(counter.getFirsted(), 5) + "ms,"
+					+ padding(counter.getFinished(), width) + "ms,"
+					+ padding((counter.getFinished() == 0 ? 0L : (1000L * count / counter.getFinished())), 6) + "/s,");
 		}
+		System.out.println("=========================================================");
+	}
+	
+	private static String padding(long value, int len) {
+		return padding(String.valueOf(value), len);
+	}
+
+	private static String padding(String str, int len) {
+		if (str.length() < len) {
+			StringBuilder buf = new StringBuilder(len);
+			for (int i = len - str.length(); i > 0; i --) {
+				buf.append(' ');
+			}
+			buf.append(str);
+			return buf.toString();
+		}
+		return str;
 	}
 
 	private static int getProperty(String key, int defaultValue) {

@@ -27,9 +27,9 @@ public class BenchmarkCounter {
     
     private long initialized;
 
-    private long compiled;
+    private long parsed;
 
-    private long executed;
+    private long firsted;
 
     private long finished;
     
@@ -41,12 +41,12 @@ public class BenchmarkCounter {
         initialized = System.currentTimeMillis();
     }
 
-    public void compiled() {
-        compiled = System.currentTimeMillis();
+    public void parsed() {
+        parsed = System.currentTimeMillis();
     }
 
-    public void executed() {
-        executed = System.currentTimeMillis();
+    public void firsted() {
+        firsted = System.currentTimeMillis();
     }
 
     public void finished() {
@@ -57,16 +57,16 @@ public class BenchmarkCounter {
         return initialized - beginning;
     }
     
-    public long getCompiled() {
-        return compiled - initialized;
+    public long getParsed() {
+        return parsed - initialized;
     }
     
-    public long getExecuted() {
-        return executed - compiled;
+    public long getFirsted() {
+        return firsted - parsed;
     }
 
     public long getFinished() {
-        return finished - executed;
+        return finished - firsted;
     }
 
 }

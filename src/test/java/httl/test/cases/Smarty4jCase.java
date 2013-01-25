@@ -49,9 +49,9 @@ public class Smarty4jCase implements BenchmarkCase {
 		engine.setTemplatePath(path.substring(0, path.length() - name.length()));
 		counter.initialized();
 		Template template = engine.getTemplate(name);
-		counter.compiled();
+		counter.parsed();
 		template.merge(context, (Writer) out);
-		counter.executed();
+		counter.firsted();
 		for (int i = times; i >= 0; i--) {
 			engine.getTemplate(name).merge(context, (Writer) out);
 		}

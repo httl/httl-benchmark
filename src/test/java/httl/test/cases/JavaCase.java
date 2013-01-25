@@ -39,9 +39,9 @@ public class JavaCase implements BenchmarkCase {
 		counter.beginning();
 		counter.initialized();
 		Books template = new Books();
-		counter.compiled();
+		counter.parsed();
 		template.render(context, (Writer) out);
-		counter.executed();
+		counter.firsted();
 		for (int i = times; i >= 0; i --) {
 			template.render(context, (Writer) out);
 		}

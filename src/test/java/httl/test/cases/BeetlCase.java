@@ -40,13 +40,13 @@ public class BeetlCase implements BenchmarkCase {
 		for (Map.Entry<String, Object> entry : context.entrySet()) {
 			template.set(entry.getKey(), entry.getValue());
 		}
-		counter.compiled();
+		counter.parsed();
 		if (out instanceof OutputStream) {
 			template.getText((OutputStream) out);
 		} else {
 			template.getText((Writer) out);
 		}
-		counter.executed();
+		counter.firsted();
 		if (out instanceof OutputStream) {
 			for (int i = times; i >= 0; i --) {
 				template.getText((OutputStream) out);

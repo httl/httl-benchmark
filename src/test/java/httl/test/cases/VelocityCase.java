@@ -56,9 +56,9 @@ public class VelocityCase implements BenchmarkCase {
 		VelocityEngine engine = new VelocityEngine(properties);
 		counter.initialized();
 		Template tempalte = engine.getTemplate(name);
-		counter.compiled();
+		counter.parsed();
 		tempalte.merge(context, (Writer) out);
-		counter.executed();
+		counter.firsted();
 		for (int i = times; i >= 0; i --) {
 			engine.getTemplate(name).merge(context, (Writer) out);
 		}
