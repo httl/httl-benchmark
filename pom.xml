@@ -163,6 +163,10 @@
 							<name>stream</name>
 							<value>${stream}</value>
 						</property>
+						<property>
+							<name>cases</name>
+							<value>${cases}</value>
+						</property>
 					</systemProperties>
 				</configuration>
 			</plugin>

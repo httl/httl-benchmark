@@ -16,17 +16,12 @@
  */
 package httl.test;
 
-import httl.test.cases.BeetlCase;
-import httl.test.cases.FreemarkerCase;
-import httl.test.cases.HttlCase;
-import httl.test.cases.JavaCase;
-import httl.test.cases.Smarty4jCase;
-import httl.test.cases.VelocityCase;
 import httl.test.model.Book;
 import httl.test.model.User;
 import httl.test.util.DiscardOutputStream;
 import httl.test.util.DiscardWriter;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,6 +42,11 @@ public class BenchmarkTest {
 		int count = getProperty("count", 10000);
 		int list = getProperty("list", 100);
 		boolean stream = "true".equals(System.getProperty("stream"));
+		String engines = System.getProperty("engines");
+		if (engines == null || engines.length() == 0 || engines.startsWith("$")) {
+			engines = "beetl,smarty4j,freemarker,velocity,httl,java";
+		}
+		String[] names = engines.split(",");
 		int width = Math.max(String.valueOf(count).length(), 6);
 		Random random = new Random();
 		Book[] books = new Book[list];
@@ -56,11 +56,12 @@ public class BenchmarkTest {
 		Map<String, Object> context = new HashMap<String, Object>();
 		context.put("user", new User("liangfei", "admin", "Y"));
 		context.put("books", books);
-		BenchmarkCase[] cases = new BenchmarkCase[] { new BeetlCase(), new Smarty4jCase(), new FreemarkerCase(), new VelocityCase(), new HttlCase(), new JavaCase() };
 		int max = 6;
-		for (int i = 0; i < cases.length; i ++) {
-			BenchmarkCase c = cases[i];
-			max = Math.max(max, c.getClass().getSimpleName().replace("Case", "").length());
+		BenchmarkCase[] cases = new BenchmarkCase[names.length];
+		for (int i = 0; i < names.length; i ++) {
+			String name = names[i];
+			max = Math.max(max, name.length());
+			cases[i] = (BenchmarkCase) Class.forName("httl.test.cases." + name.substring(0, 1).toUpperCase() + name.substring(1) + "Case").newInstance();
 		}
 		System.out.println("====================test environment=====================");
 		System.out.println("os: " + System.getProperty("os.name") + " " + System.getProperty("os.version") + " "+ System.getProperty("os.arch")
@@ -70,12 +71,13 @@ public class BenchmarkTest {
 				+ "M, free: " + (Runtime.getRuntime().freeMemory()  / 1024 / 1024)
 				+ "M, use: " + (Runtime.getRuntime().totalMemory() / 1024 / 1024 - Runtime.getRuntime().freeMemory() / 1024 / 1024) + "M");
 		System.out.println("====================test parameters======================");
-		System.out.println("count: " + count + ", list: " + list + ", stream: " + stream);
+		System.out.println("count: " + count + ", list: " + list + ", stream: " + stream + ",\n"
+				+ "engines: " + engines);
 		System.out.println("====================test result==========================");
 		System.out.println(padding("engine", max) + ",   " + " init,  " + "parse,  " + "first,  " + padding("total", width) + ",  " + "   tps,");
 		for (int i = 0; i < cases.length; i ++) {
+			String name = names[i];
 			BenchmarkCase c = cases[i];
-			String name = c.getClass().getSimpleName().replace("Case", "");
 			BenchmarkCounter counter = new BenchmarkCounter();
 			c.execute(counter, count, "/httl/test/templates/books", context, stream ? new DiscardOutputStream() : new DiscardWriter());
 			System.out.println(padding(name.toLowerCase(), max) + ", " 
