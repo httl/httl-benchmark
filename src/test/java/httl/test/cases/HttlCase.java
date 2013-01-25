@@ -16,13 +16,10 @@
  */
 package httl.test.cases;
 
-import java.util.Map;
-
 import httl.Engine;
-import httl.Template;
 import httl.test.BenchmarkCase;
-import httl.test.BenchmarkCounter;
 
+import java.util.Map;
 
 /**
  * HttlCase
@@ -31,19 +28,13 @@ import httl.test.BenchmarkCounter;
  */
 public class HttlCase implements BenchmarkCase {
 
-	public void execute(BenchmarkCounter counter, int times, String name, Map<String, Object> context, Object out) throws Exception {
+	private Engine engine = Engine.getEngine();
+
+	public void execute(int times, String name, Map<String, Object> context, Object out) throws Exception {
 		name += ".httl";
-		counter.beginning();
-		Engine engine = Engine.getEngine();
-		counter.initialized();
-		Template template = engine.getTemplate(name);
-		counter.parsed();
-		template.render(context, out);
-		counter.firsted();
-		for (int i = times; i >= 0; i--) {
+		while (-- times >= 0) {
 			engine.getTemplate(name).render(context, out);
 		}
-		counter.finished();
 	}
 
 }

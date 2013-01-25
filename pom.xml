@@ -156,6 +156,10 @@
 							<value>${count}</value>
 						</property>
 						<property>
+							<name>warm</name>
+							<value>${warm}</value>
+						</property>
+						<property>
 							<name>list</name>
 							<value>${list}</value>
 						</property>
@@ -164,8 +168,8 @@
 							<value>${stream}</value>
 						</property>
 						<property>
-							<name>cases</name>
-							<value>${cases}</value>
+							<name>engines</name>
+							<value>${engines}</value>
 						</property>
 					</systemProperties>
 				</configuration>

@@ -25,6 +25,6 @@ import java.util.Map;
  */
 public interface BenchmarkCase {
 
-    void execute(BenchmarkCounter counter, int times, String name, Map<String, Object> context, Object out) throws Exception;
+    void execute(int times, String name, Map<String, Object> context, Object out) throws Exception;
 
 }

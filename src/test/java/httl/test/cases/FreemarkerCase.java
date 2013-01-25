@@ -16,17 +16,14 @@
  */
 package httl.test.cases;
 
+import freemarker.cache.ClassTemplateLoader;
+import freemarker.template.Configuration;
 import httl.test.BenchmarkCase;
-import httl.test.BenchmarkCounter;
 
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Map;
-
-import freemarker.cache.ClassTemplateLoader;
-import freemarker.template.Configuration;
-import freemarker.template.Template;
 
 /**
  * FreemarkerCase
@@ -35,23 +32,20 @@ import freemarker.template.Template;
  */
 public class FreemarkerCase implements BenchmarkCase {
 
-	public void execute(BenchmarkCounter counter, int times, String name, Map<String, Object> context, Object out) throws Exception {
+	private Configuration configuration = new Configuration();
+
+	public FreemarkerCase() {
+		configuration.setTemplateLoader(new ClassTemplateLoader(FreemarkerCase.class, "/"));
+	}
+	
+	public void execute(int times, String name, Map<String, Object> context, Object out) throws Exception {
 		name += ".ftl";
 		if (out instanceof OutputStream) {
 			out = new OutputStreamWriter((OutputStream) out);
 		}
-		counter.beginning();
-		Configuration configuration = new Configuration();
-		configuration.setTemplateLoader(new ClassTemplateLoader(FreemarkerCase.class, "/"));
-		counter.initialized();
-		Template template = configuration.getTemplate(name);
-		counter.parsed();
-		template.process(context, (Writer) out);
-		counter.firsted();
-		for (int i = times; i >= 0; i --) {
+		while (-- times >= 0) {
 			configuration.getTemplate(name).process(context, (Writer) out);
 		}
-		counter.finished();
 	}
 
 }

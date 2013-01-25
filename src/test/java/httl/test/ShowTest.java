@@ -53,9 +53,8 @@ public class ShowTest {
         for (int i = 0; i < cases.length; i ++) {
         	BenchmarkCase c = cases[i % cases.length];
             String name = c.getClass().getSimpleName().replace("Case", "");
-        	BenchmarkCounter counter = new BenchmarkCounter();
             StringWriter writer = new StringWriter();
-            c.execute(counter, 1, "books", context, new DiscardWriter());
+            c.execute(1, "books", context, new DiscardWriter());
             System.out.println("========" + name.toLowerCase() + "========");
             System.out.println(writer.getBuffer().toString());
             System.out.println("================");

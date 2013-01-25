@@ -17,7 +17,6 @@
 package httl.test.cases;
 
 import httl.test.BenchmarkCase;
-import httl.test.BenchmarkCounter;
 import httl.test.util.DateTool;
 
 import java.io.OutputStream;
@@ -26,7 +25,6 @@ import java.io.Writer;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.velocity.Template;
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.VelocityEngine;
 
@@ -36,8 +34,18 @@ import org.apache.velocity.app.VelocityEngine;
  * @author Liang Fei (liangfei0201 AT gmail DOT com)
  */
 public class VelocityCase implements BenchmarkCase {
-	
-	public void execute(BenchmarkCounter counter, int times, String name, Map<String, Object> map, Object out) throws Exception {
+
+	private VelocityEngine engine;
+
+	public VelocityCase() {
+		Properties properties = new Properties();
+		properties.put("resource.loader", "classpath");
+		properties.put("classpath.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
+		properties.put("classpath.resource.loader.cache", "true");
+		engine = new VelocityEngine(properties);
+	}
+
+	public void execute(int times, String name, Map<String, Object> map, Object out) throws Exception {
 		name += ".vm";
 		if (out instanceof OutputStream) {
 			out = new OutputStreamWriter((OutputStream) out);
@@ -47,22 +55,9 @@ public class VelocityCase implements BenchmarkCase {
 		for (Map.Entry<String, Object> entry : map.entrySet()) {
 			context.put(entry.getKey(), entry.getValue());
 		}
-		counter.beginning();
-		Properties properties = new Properties();
-		properties.put("resource.loader", "classpath");
-		properties.put("classpath.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
-		properties.put("classpath.resource.loader.cache", "true");
-		// properties.put("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.Log4JLogChute");
-		VelocityEngine engine = new VelocityEngine(properties);
-		counter.initialized();
-		Template tempalte = engine.getTemplate(name);
-		counter.parsed();
-		tempalte.merge(context, (Writer) out);
-		counter.firsted();
 		for (int i = times; i >= 0; i --) {
 			engine.getTemplate(name).merge(context, (Writer) out);
 		}
-		counter.finished();
 	}
 
 }

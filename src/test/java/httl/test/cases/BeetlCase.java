@@ -17,7 +17,6 @@
 package httl.test.cases;
 
 import httl.test.BenchmarkCase;
-import httl.test.BenchmarkCounter;
 
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -29,24 +28,20 @@ import org.bee.tl.core.Template;
 
 public class BeetlCase implements BenchmarkCase {
 
-	public void execute(BenchmarkCounter counter, int times, String name, Map<String, Object> context, Object out) throws Exception {
+	public void execute(int times, String name, Map<String, Object> context, Object out) throws Exception {
 		name += ".btl";
-		counter.beginning();
 		GroupTemplate group = new GroupTemplate();
 		group.enableOptimize();
 		group.enableNativeCall();
-		counter.initialized();
 		Template template = group.getReaderTemplate(new InputStreamReader(BeetlCase.class.getClassLoader().getResourceAsStream(name.startsWith("/") ? name.substring(1) : name))); 
 		for (Map.Entry<String, Object> entry : context.entrySet()) {
 			template.set(entry.getKey(), entry.getValue());
 		}
-		counter.parsed();
 		if (out instanceof OutputStream) {
 			template.getText((OutputStream) out);
 		} else {
 			template.getText((Writer) out);
 		}
-		counter.firsted();
 		if (out instanceof OutputStream) {
 			for (int i = times; i >= 0; i --) {
 				template.getText((OutputStream) out);
@@ -56,7 +51,6 @@ public class BeetlCase implements BenchmarkCase {
 				template.getText((Writer) out);
 			}
 		}
-		counter.finished();
 	}
 
 }

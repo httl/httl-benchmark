@@ -17,7 +17,6 @@
 package httl.test.cases;
 
 import httl.test.BenchmarkCase;
-import httl.test.BenchmarkCounter;
 import httl.test.templates.Books;
 
 import java.io.OutputStream;
@@ -32,20 +31,14 @@ import java.util.Map;
  */
 public class JavaCase implements BenchmarkCase {
 	
-	public void execute(BenchmarkCounter counter, int times, String name, Map<String, Object> context, Object out) throws Exception {
+	public void execute(int times, String name, Map<String, Object> context, Object out) throws Exception {
 		if (out instanceof OutputStream) {
 			out = new OutputStreamWriter((OutputStream) out);
 		}
-		counter.beginning();
-		counter.initialized();
 		Books template = new Books();
-		counter.parsed();
-		template.render(context, (Writer) out);
-		counter.firsted();
 		for (int i = times; i >= 0; i --) {
 			template.render(context, (Writer) out);
 		}
-		counter.finished();
 	}
 
 }

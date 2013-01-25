@@ -17,7 +17,6 @@
 package httl.test.cases;
 
 import httl.test.BenchmarkCase;
-import httl.test.BenchmarkCounter;
 
 import java.io.File;
 import java.io.OutputStream;
@@ -27,7 +26,6 @@ import java.util.Map;
 
 import org.lilystudio.smarty4j.Context;
 import org.lilystudio.smarty4j.Engine;
-import org.lilystudio.smarty4j.Template;
 
 /**
  * Smarty4jCase
@@ -36,26 +34,20 @@ import org.lilystudio.smarty4j.Template;
  */
 public class Smarty4jCase implements BenchmarkCase {
 
-	public void execute(BenchmarkCounter counter, int times, String name, Map<String, Object> map, Object out) throws Exception {
+	private Engine engine = new Engine();
+	
+	public void execute(int times, String name, Map<String, Object> map, Object out) throws Exception {
 		name += ".st";
 		if (out instanceof OutputStream) {
 			out = new OutputStreamWriter((OutputStream) out);
 		}
-		Context context = new Context();
-		context.putAll(map);
-		counter.beginning();
-		Engine engine = new Engine();
 		String path = new File(Thread.currentThread().getContextClassLoader().getResource(name.startsWith("/") ? name.substring(1) : name).getFile()).getAbsolutePath().replace('\\', '/');
 		engine.setTemplatePath(path.substring(0, path.length() - name.length()));
-		counter.initialized();
-		Template template = engine.getTemplate(name);
-		counter.parsed();
-		template.merge(context, (Writer) out);
-		counter.firsted();
+		Context context = new Context();
+		context.putAll(map);
 		for (int i = times; i >= 0; i--) {
 			engine.getTemplate(name).merge(context, (Writer) out);
 		}
-		counter.finished();
 	}
 
 }

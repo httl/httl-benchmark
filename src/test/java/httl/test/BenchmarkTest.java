@@ -21,7 +21,6 @@ import httl.test.model.User;
 import httl.test.util.DiscardOutputStream;
 import httl.test.util.DiscardWriter;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -40,11 +39,12 @@ public class BenchmarkTest {
 	@Test
 	public void testBenchmark() throws Exception {
 		int count = getProperty("count", 10000);
+		int warm = getProperty("warm", 100);
 		int list = getProperty("list", 100);
 		boolean stream = "true".equals(System.getProperty("stream"));
 		String engines = System.getProperty("engines");
 		if (engines == null || engines.length() == 0 || engines.startsWith("$")) {
-			engines = "beetl,smarty4j,freemarker,velocity,httl,java";
+			engines = "java,httl,velocity,freemarker,smarty4j,beetl";
 		}
 		String[] names = engines.split(",");
 		int width = Math.max(String.valueOf(count).length(), 6);
@@ -71,21 +71,30 @@ public class BenchmarkTest {
 				+ "M, free: " + (Runtime.getRuntime().freeMemory()  / 1024 / 1024)
 				+ "M, use: " + (Runtime.getRuntime().totalMemory() / 1024 / 1024 - Runtime.getRuntime().freeMemory() / 1024 / 1024) + "M");
 		System.out.println("====================test parameters======================");
-		System.out.println("count: " + count + ", list: " + list + ", stream: " + stream + ",\n"
+		System.out.println("count: " + count + ", warm: " + warm + ", list: " + list + ", stream: " + stream + ",\n"
 				+ "engines: " + engines);
 		System.out.println("====================test result==========================");
-		System.out.println(padding("engine", max) + ",   " + " init,  " + "parse,  " + "first,  " + padding("total", width) + ",  " + "   tps,");
+		System.out.println(padding("engine", max) + ",  " + padding("time", width) + ",  " + padding("tps", 6) + ", " + padding("rate", 4) + ",");
+		for (int i = 0; i < cases.length; i ++) {
+			cases[i].execute(warm, "/httl/test/templates/books", context, stream ? new DiscardOutputStream() : new DiscardWriter());
+		}
+		long base = 0;
 		for (int i = 0; i < cases.length; i ++) {
 			String name = names[i];
 			BenchmarkCase c = cases[i];
-			BenchmarkCounter counter = new BenchmarkCounter();
-			c.execute(counter, count, "/httl/test/templates/books", context, stream ? new DiscardOutputStream() : new DiscardWriter());
-			System.out.println(padding(name.toLowerCase(), max) + ", " 
-					+ padding(counter.getInitialized(), 5) + "ms,"
-					+ padding(counter.getParsed(), 5) + "ms,"
-					+ padding(counter.getFirsted(), 5) + "ms,"
-					+ padding(counter.getFinished(), width) + "ms,"
-					+ padding((counter.getFinished() == 0 ? 0L : (1000L * count / counter.getFinished())), 6) + "/s,");
+			Object out = stream ? new DiscardOutputStream() : new DiscardWriter();
+			long start = System.currentTimeMillis();
+			c.execute(count, "/httl/test/templates/books", context, out);
+			long elapsed = System.currentTimeMillis() - start;
+			long tps = elapsed == 0 || count == 0 ? 0 : (1000L * count / elapsed);
+			if (i == 0) {
+				base = tps;
+			}
+			long ratio = base == 0 || tps == 0 ? 0 : 100 * tps / base;
+			System.out.println(padding(name.toLowerCase(), max) + "," 
+					+ padding(elapsed, width) + "ms,"
+					+ padding(tps, 6) + "/s,"
+					+ padding(ratio, 4) + "%,");
 		}
 		System.out.println("=========================================================");
 	}
