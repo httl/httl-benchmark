@@ -19,7 +19,7 @@ package httl.test;
 import java.util.Map;
 
 /**
- * TemplateCase
+ * BenchmarkCase
  * 
  * @author Liang Fei (liangfei0201 AT gmail DOT com)
  */

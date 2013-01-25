@@ -6,7 +6,7 @@
  *  (the "License"); you may not use this file except in compliance with
  *  the License.  You may obtain a copy of the License at
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ *	  http://www.apache.org/licenses/LICENSE-2.0
  *
  *  Unless required by applicable law or agreed to in writing, software
  *  distributed under the License is distributed on an "AS IS" BASIS,
@@ -31,21 +31,21 @@ import java.util.Map;
  * @author Liang Fei (liangfei0201 AT gmail DOT com)
  */
 public class JavaCase implements BenchmarkCase {
-    
-    public void execute(BenchmarkCounter counter, int times, String name, Map<String, Object> context, Object out) throws Exception {
-    	if (out instanceof OutputStream) {
-        	out = new OutputStreamWriter((OutputStream) out);
-        }
-        counter.beginning();
-        counter.initialized();
-        Books template = new Books();
-        counter.compiled();
-        template.render(context, (Writer) out);
-        counter.executed();
-        for (int i = times; i >= 0; i --) {
-            template.render(context, (Writer) out);
-        }
-        counter.finished();
-    }
-    
+	
+	public void execute(BenchmarkCounter counter, int times, String name, Map<String, Object> context, Object out) throws Exception {
+		if (out instanceof OutputStream) {
+			out = new OutputStreamWriter((OutputStream) out);
+		}
+		counter.beginning();
+		counter.initialized();
+		Books template = new Books();
+		counter.compiled();
+		template.render(context, (Writer) out);
+		counter.executed();
+		for (int i = times; i >= 0; i --) {
+			template.render(context, (Writer) out);
+		}
+		counter.finished();
+	}
+
 }

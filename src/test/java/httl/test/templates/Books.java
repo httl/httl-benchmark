@@ -25,9 +25,9 @@ import java.text.SimpleDateFormat;
 import java.util.Map;
 
 /**
- * list
+ * Books
  * 
- * @author william.liangf
+ * @author Liang Fei (liangfei0201 AT gmail DOT com)
  */
 public class Books {
     
