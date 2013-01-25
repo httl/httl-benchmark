@@ -47,7 +47,7 @@ public class BenchmarkTest {
         	String name = c.getClass().getSimpleName().replace("Case", "");
             System.out.println("========" + name.toLowerCase() + "========");
             BenchmarkCounter counter = new BenchmarkCounter();
-            c.execute(counter, count, "/templates/books", context, stream ? new DiscardOutputStream() : new DiscardWriter());
+            c.execute(counter, count, "/httl/test/templates/books", context, stream ? new DiscardOutputStream() : new DiscardWriter());
             System.out.println("init: " + counter.getInitialized() + "ms, " +
             		"compile: " + counter.getCompiled() + "ms, " +
             		"first: " + counter.getExecuted() + "ms, " +

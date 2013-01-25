@@ -18,6 +18,7 @@ package httl.test.cases;
 
 import httl.test.BenchmarkCase;
 import httl.test.BenchmarkCounter;
+import httl.test.templates.Books;
 
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
