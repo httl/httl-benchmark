@@ -14,33 +14,47 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package httl.test.performance;
+package httl.test.cases;
 
+import httl.test.BenchmarkCase;
+import httl.test.BenchmarkCounter;
+
+import java.io.File;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Map;
 
+import org.lilystudio.smarty4j.Context;
+import org.lilystudio.smarty4j.Engine;
+import org.lilystudio.smarty4j.Template;
+
 /**
- * JavaCase
+ * Smarty4jCase
  * 
  * @author Liang Fei (liangfei0201 AT gmail DOT com)
  */
-public class JavaCase implements Case {
-    
-    public void count(Counter counter, int times, String name, Map<String, Object> context, Object out) throws Exception {
-        counter.beginning();
-        counter.initialized();
-        Books template = new Books();
-        counter.compiled();
+public class Smarty4jCase implements BenchmarkCase {
+
+    public void execute(BenchmarkCounter counter, int times, String name, Map<String, Object> map, Object out) throws Exception {
+        name += ".st";
         if (out instanceof OutputStream) {
         	out = new OutputStreamWriter((OutputStream) out);
         }
-        template.render(context, (Writer) out);
+        Context context = new Context();
+        context.putAll(map);
+        counter.beginning();
+        Engine engine = new Engine();
+        String path = new File(Thread.currentThread().getContextClassLoader().getResource(name.startsWith("/") ? name.substring(1) : name).getFile()).getAbsolutePath().replace('\\', '/');
+        engine.setTemplatePath(path.substring(0, path.length() - name.length()));
+        counter.initialized();
+        Template template = engine.getTemplate(name);
+        counter.compiled();
+        template.merge(context, (Writer) out);
         counter.executed();
-        for (int i = times; i >= 0; i --) {
-            template.render(context, (Writer) out);
-        }
+		for (int i = times; i >= 0; i--) {
+			engine.getTemplate(name).merge(context, (Writer) out);
+		}
         counter.finished();
     }
     

@@ -14,7 +14,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package httl.test.performance;
+package httl.test.cases;
 
 import httl.test.model.Book;
 import httl.test.model.User;

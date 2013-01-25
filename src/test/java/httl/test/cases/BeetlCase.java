@@ -14,7 +14,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package httl.test.performance;
+package httl.test.cases;
+
+import httl.test.BenchmarkCase;
+import httl.test.BenchmarkCounter;
 
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -24,15 +27,16 @@ import java.util.Map;
 import org.bee.tl.core.GroupTemplate;
 import org.bee.tl.core.Template;
 
-public class BeetlCase implements Case {
+public class BeetlCase implements BenchmarkCase {
 
-    public void count(Counter counter, int times, String name, Map<String, Object> context, Object out) throws Exception {
-        counter.beginning();
+    public void execute(BenchmarkCounter counter, int times, String name, Map<String, Object> context, Object out) throws Exception {
+        name += ".btl";
+    	counter.beginning();
         GroupTemplate group = new GroupTemplate();
         group.enableOptimize();
         group.enableNativeCall();
         counter.initialized();
-        Template template = group.getReaderTemplate(new InputStreamReader(BeetlCase.class.getClassLoader().getResourceAsStream("performance/books.btl"))); 
+        Template template = group.getReaderTemplate(new InputStreamReader(BeetlCase.class.getClassLoader().getResourceAsStream("templates/books.btl"))); 
         for (Map.Entry<String, Object> entry : context.entrySet()) {
         	template.set(entry.getKey(), entry.getValue());
         }

@@ -14,45 +14,43 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package httl.test.performance;
+package httl.test.cases;
 
-import java.io.File;
+import httl.test.BenchmarkCase;
+import httl.test.BenchmarkCounter;
+
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Map;
 
-import org.lilystudio.smarty4j.Context;
-import org.lilystudio.smarty4j.Engine;
-import org.lilystudio.smarty4j.Template;
+import freemarker.cache.ClassTemplateLoader;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 
 /**
- * Smarty4jCase
+ * FreemarkerCase
  * 
  * @author Liang Fei (liangfei0201 AT gmail DOT com)
  */
-public class Smarty4jCase implements Case {
+public class FreemarkerCase implements BenchmarkCase {
 
-    public void count(Counter counter, int times, String name, Map<String, Object> map, Object out) throws Exception {
-        String path = "/" + name + ".st";
-    	Context context = new Context();
-        context.putAll(map);
-        counter.beginning();
-        Engine engine = new Engine();
-        File file = new File(Thread.currentThread().getContextClassLoader().getResource("performance/books.st").getFile());
-        String directory = file.getParentFile().getAbsolutePath();
-        engine.setTemplatePath(directory);
-        counter.initialized();
-        Template template = engine.getTemplate(path);
-        counter.compiled();
-        if (out instanceof OutputStream) {
+    public void execute(BenchmarkCounter counter, int times, String name, Map<String, Object> context, Object out) throws Exception {
+    	name += ".ftl";
+    	if (out instanceof OutputStream) {
         	out = new OutputStreamWriter((OutputStream) out);
         }
-        template.merge(context, (Writer) out);
+        counter.beginning();
+        Configuration configuration = new Configuration();
+        configuration.setTemplateLoader(new ClassTemplateLoader(FreemarkerCase.class, "/"));
+        counter.initialized();
+        Template template = configuration.getTemplate(name);
+        counter.compiled();
+        template.process(context, (Writer) out);
         counter.executed();
-		for (int i = times; i >= 0; i--) {
-			engine.getTemplate(path).merge(context, (Writer) out);
-		}
+        for (int i = times; i >= 0; i --) {
+        	configuration.getTemplate(name).process(context, (Writer) out);
+        }
         counter.finished();
     }
     

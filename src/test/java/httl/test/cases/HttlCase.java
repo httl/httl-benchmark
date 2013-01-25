@@ -14,17 +14,36 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package httl.test.performance;
+package httl.test.cases;
 
 import java.util.Map;
 
+import httl.Engine;
+import httl.Template;
+import httl.test.BenchmarkCase;
+import httl.test.BenchmarkCounter;
+
+
 /**
- * TemplateCase
+ * HttlCase
  * 
  * @author Liang Fei (liangfei0201 AT gmail DOT com)
  */
-public interface Case {
+public class HttlCase implements BenchmarkCase {
 
-    void count(Counter counter, int times, String name, Map<String, Object> context, Object out) throws Exception;
+    public void execute(BenchmarkCounter counter, int times, String name, Map<String, Object> context, Object out) throws Exception {
+    	name += ".httl";
+        counter.beginning();
+        Engine engine = Engine.getEngine();
+        counter.initialized();
+        Template template = engine.getTemplate(name);
+        counter.compiled();
+        template.render(context, out);
+        counter.executed();
+		for (int i = times; i >= 0; i--) {
+			engine.getTemplate(name).render(context, out);
+		}
+        counter.finished();
+    }
 
 }

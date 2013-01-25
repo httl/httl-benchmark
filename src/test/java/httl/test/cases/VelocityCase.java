@@ -14,8 +14,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package httl.test.performance;
+package httl.test.cases;
 
+import httl.test.BenchmarkCase;
+import httl.test.BenchmarkCounter;
 import httl.test.util.DateTool;
 
 import java.io.OutputStream;
@@ -33,11 +35,14 @@ import org.apache.velocity.app.VelocityEngine;
  * 
  * @author Liang Fei (liangfei0201 AT gmail DOT com)
  */
-public class VelocityCase implements Case {
+public class VelocityCase implements BenchmarkCase {
     
-    public void count(Counter counter, int times, String name, Map<String, Object> map, Object out) throws Exception {
-        String path = "performance/" + name + ".vm";
-    	VelocityContext context = new VelocityContext();
+    public void execute(BenchmarkCounter counter, int times, String name, Map<String, Object> map, Object out) throws Exception {
+        name += ".vm";
+        if (out instanceof OutputStream) {
+        	out = new OutputStreamWriter((OutputStream) out);
+        }
+        VelocityContext context = new VelocityContext();
         context.put("date", new DateTool());
         for (Map.Entry<String, Object> entry : map.entrySet()) {
             context.put(entry.getKey(), entry.getValue());
@@ -50,15 +55,12 @@ public class VelocityCase implements Case {
         // properties.put("runtime.log.logsystem.class", "org.apache.velocity.runtime.log.Log4JLogChute");
         VelocityEngine engine = new VelocityEngine(properties);
         counter.initialized();
-        Template tempalte = engine.getTemplate(path);
+        Template tempalte = engine.getTemplate(name);
         counter.compiled();
-        if (out instanceof OutputStream) {
-        	out = new OutputStreamWriter((OutputStream) out);
-        }
         tempalte.merge(context, (Writer) out);
         counter.executed();
         for (int i = times; i >= 0; i --) {
-        	engine.getTemplate(path).merge(context, (Writer) out);
+        	engine.getTemplate(name).merge(context, (Writer) out);
         }
         counter.finished();
     }

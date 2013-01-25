@@ -14,14 +14,14 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package httl.test.performance;
+package httl.test;
 
 /**
  * Counter
  * 
  * @author Liang Fei (liangfei0201 AT gmail DOT com)
  */
-public class Counter {
+public class BenchmarkCounter {
     
     private long beginning;
     

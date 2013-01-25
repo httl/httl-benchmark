@@ -14,33 +14,37 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package httl.test.performance;
+package httl.test.cases;
 
-import httl.Engine;
-import httl.Template;
+import httl.test.BenchmarkCase;
+import httl.test.BenchmarkCounter;
 
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
 import java.util.Map;
 
 /**
- * HttlCase
+ * JavaCase
  * 
  * @author Liang Fei (liangfei0201 AT gmail DOT com)
  */
-public class HttlCase implements Case {
-
-    public void count(Counter counter, int times, String name, Map<String, Object> context, Object out) throws Exception {
-    	String path = "performance/" + name + ".httl";
+public class JavaCase implements BenchmarkCase {
+    
+    public void execute(BenchmarkCounter counter, int times, String name, Map<String, Object> context, Object out) throws Exception {
+    	if (out instanceof OutputStream) {
+        	out = new OutputStreamWriter((OutputStream) out);
+        }
         counter.beginning();
-        Engine engine = Engine.getEngine();
         counter.initialized();
-        Template template = engine.getTemplate(path);
+        Books template = new Books();
         counter.compiled();
-        template.render(context, out);
+        template.render(context, (Writer) out);
         counter.executed();
-		for (int i = times; i >= 0; i--) {
-			engine.getTemplate(path).render(context, out);
-		}
+        for (int i = times; i >= 0; i --) {
+            template.render(context, (Writer) out);
+        }
         counter.finished();
     }
-
+    
 }
