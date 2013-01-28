@@ -14,39 +14,30 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package httl.test.cases;
+package httl.test.engines;
 
-import httl.test.BenchmarkCase;
+import httl.test.Benchmark;
+import httl.test.templates.Books;
 
-import java.io.File;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Map;
 
-import org.lilystudio.smarty4j.Context;
-import org.lilystudio.smarty4j.Engine;
-
 /**
- * Smarty4jCase
+ * JavaCase
  * 
  * @author Liang Fei (liangfei0201 AT gmail DOT com)
  */
-public class Smarty4jCase implements BenchmarkCase {
-
-	private Engine engine = new Engine();
+public class Java implements Benchmark {
 	
-	public void execute(int times, String name, Map<String, Object> map, Object out) throws Exception {
-		name += ".st";
+	public void execute(int times, String name, Map<String, Object> context, Object out) throws Exception {
 		if (out instanceof OutputStream) {
 			out = new OutputStreamWriter((OutputStream) out);
 		}
-		String path = new File(Thread.currentThread().getContextClassLoader().getResource(name.startsWith("/") ? name.substring(1) : name).getFile()).getAbsolutePath().replace('\\', '/');
-		engine.setTemplatePath(path.substring(0, path.length() - name.length()));
-		Context context = new Context();
-		context.putAll(map);
-		for (int i = times; i >= 0; i--) {
-			engine.getTemplate(name).merge(context, (Writer) out);
+		Books template = new Books();
+		for (int i = times; i >= 0; i --) {
+			template.render(context, (Writer) out);
 		}
 	}
 

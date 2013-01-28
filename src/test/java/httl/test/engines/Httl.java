@@ -14,10 +14,10 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package httl.test.cases;
+package httl.test.engines;
 
 import httl.Engine;
-import httl.test.BenchmarkCase;
+import httl.test.Benchmark;
 
 import java.util.Map;
 
@@ -26,13 +26,13 @@ import java.util.Map;
  * 
  * @author Liang Fei (liangfei0201 AT gmail DOT com)
  */
-public class HttlCase implements BenchmarkCase {
+public class Httl implements Benchmark {
 
 	private Engine engine = Engine.getEngine();
 
 	public void execute(int times, String name, Map<String, Object> context, Object out) throws Exception {
 		name += ".httl";
-		while (-- times >= 0) {
+		for (int i = times; i >= 0; i --) {
 			engine.getTemplate(name).render(context, out);
 		}
 	}

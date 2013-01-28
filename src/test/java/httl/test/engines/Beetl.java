@@ -14,31 +14,44 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package httl.test.cases;
+package httl.test.engines;
 
-import httl.test.BenchmarkCase;
-import httl.test.templates.Books;
+import httl.test.Benchmark;
 
+import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Map;
 
-/**
- * JavaCase
- * 
- * @author Liang Fei (liangfei0201 AT gmail DOT com)
- */
-public class JavaCase implements BenchmarkCase {
-	
+import org.bee.tl.core.GroupTemplate;
+import org.bee.tl.core.Template;
+
+public class Beetl implements Benchmark {
+
 	public void execute(int times, String name, Map<String, Object> context, Object out) throws Exception {
-		if (out instanceof OutputStream) {
-			out = new OutputStreamWriter((OutputStream) out);
+		name += ".btl";
+		GroupTemplate group = new GroupTemplate();
+		group.enableOptimize();
+		group.enableNativeCall();
+		Template template = group.getReaderTemplate(new InputStreamReader(Beetl.class.getClassLoader().getResourceAsStream(name.startsWith("/") ? name.substring(1) : name))); 
+		for (Map.Entry<String, Object> entry : context.entrySet()) {
+			template.set(entry.getKey(), entry.getValue());
 		}
-		Books template = new Books();
-		for (int i = times; i >= 0; i --) {
-			template.render(context, (Writer) out);
+		if (out instanceof OutputStream) {
+			template.getText((OutputStream) out);
+		} else {
+			template.getText((Writer) out);
+		}
+		if (out instanceof OutputStream) {
+			for (int i = times; i >= 0; i --) {
+				template.getText((OutputStream) out);
+			}
+		} else {
+			for (int i = times; i >= 0; i --) {
+				template.getText((Writer) out);
+			}
 		}
 	}
 
 }
+

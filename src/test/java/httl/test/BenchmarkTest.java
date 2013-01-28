@@ -57,11 +57,11 @@ public class BenchmarkTest {
 		context.put("user", new User("liangfei", "admin", "Y"));
 		context.put("books", books);
 		int max = 6;
-		BenchmarkCase[] cases = new BenchmarkCase[names.length];
+		Benchmark[] cases = new Benchmark[names.length];
 		for (int i = 0; i < names.length; i ++) {
 			String name = names[i];
 			max = Math.max(max, name.length());
-			cases[i] = (BenchmarkCase) Class.forName("httl.test.cases." + name.substring(0, 1).toUpperCase() + name.substring(1) + "Case").newInstance();
+			cases[i] = (Benchmark) Class.forName("httl.test.cases." + name.substring(0, 1).toUpperCase() + name.substring(1) + "Case").newInstance();
 		}
 		System.out.println("====================test environment=====================");
 		System.out.println("os: " + System.getProperty("os.name") + " " + System.getProperty("os.version") + " "+ System.getProperty("os.arch")
@@ -81,7 +81,7 @@ public class BenchmarkTest {
 		long base = 0;
 		for (int i = 0; i < cases.length; i ++) {
 			String name = names[i];
-			BenchmarkCase c = cases[i];
+			Benchmark c = cases[i];
 			Object out = stream ? new DiscardOutputStream() : new DiscardWriter();
 			long start = System.currentTimeMillis();
 			c.execute(count, "/httl/test/templates/books", context, out);

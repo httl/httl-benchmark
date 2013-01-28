@@ -23,7 +23,7 @@ import java.util.Map;
  * 
  * @author Liang Fei (liangfei0201 AT gmail DOT com)
  */
-public interface BenchmarkCase {
+public interface Benchmark {
 
     void execute(int times, String name, Map<String, Object> context, Object out) throws Exception;
 

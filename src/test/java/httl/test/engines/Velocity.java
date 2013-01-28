@@ -14,9 +14,9 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package httl.test.cases;
+package httl.test.engines;
 
-import httl.test.BenchmarkCase;
+import httl.test.Benchmark;
 import httl.test.util.DateTool;
 
 import java.io.OutputStream;
@@ -33,11 +33,11 @@ import org.apache.velocity.app.VelocityEngine;
  * 
  * @author Liang Fei (liangfei0201 AT gmail DOT com)
  */
-public class VelocityCase implements BenchmarkCase {
+public class Velocity implements Benchmark {
 
 	private VelocityEngine engine;
 
-	public VelocityCase() {
+	public Velocity() {
 		Properties properties = new Properties();
 		properties.put("resource.loader", "classpath");
 		properties.put("classpath.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");

@@ -14,37 +14,39 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package httl.test.cases;
+package httl.test.engines;
 
-import freemarker.cache.ClassTemplateLoader;
-import freemarker.template.Configuration;
-import httl.test.BenchmarkCase;
+import httl.test.Benchmark;
 
+import java.io.File;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.util.Map;
 
+import org.lilystudio.smarty4j.Context;
+import org.lilystudio.smarty4j.Engine;
+
 /**
- * FreemarkerCase
+ * Smarty4jCase
  * 
  * @author Liang Fei (liangfei0201 AT gmail DOT com)
  */
-public class FreemarkerCase implements BenchmarkCase {
+public class Smarty4j implements Benchmark {
 
-	private Configuration configuration = new Configuration();
-
-	public FreemarkerCase() {
-		configuration.setTemplateLoader(new ClassTemplateLoader(FreemarkerCase.class, "/"));
-	}
+	private Engine engine = new Engine();
 	
-	public void execute(int times, String name, Map<String, Object> context, Object out) throws Exception {
-		name += ".ftl";
+	public void execute(int times, String name, Map<String, Object> map, Object out) throws Exception {
+		name += ".st";
 		if (out instanceof OutputStream) {
 			out = new OutputStreamWriter((OutputStream) out);
 		}
-		while (-- times >= 0) {
-			configuration.getTemplate(name).process(context, (Writer) out);
+		String path = new File(Thread.currentThread().getContextClassLoader().getResource(name.startsWith("/") ? name.substring(1) : name).getFile()).getAbsolutePath().replace('\\', '/');
+		engine.setTemplatePath(path.substring(0, path.length() - name.length()));
+		Context context = new Context();
+		context.putAll(map);
+		for (int i = times; i >= 0; i--) {
+			engine.getTemplate(name).merge(context, (Writer) out);
 		}
 	}
 

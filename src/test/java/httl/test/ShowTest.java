@@ -16,12 +16,12 @@
  */
 package httl.test;
 
-import httl.test.cases.BeetlCase;
-import httl.test.cases.FreemarkerCase;
-import httl.test.cases.HttlCase;
-import httl.test.cases.JavaCase;
-import httl.test.cases.Smarty4jCase;
-import httl.test.cases.VelocityCase;
+import httl.test.engines.Beetl;
+import httl.test.engines.Freemarker;
+import httl.test.engines.Httl;
+import httl.test.engines.Java;
+import httl.test.engines.Smarty4j;
+import httl.test.engines.Velocity;
 import httl.test.model.Book;
 import httl.test.model.User;
 import httl.test.util.DiscardWriter;
@@ -49,9 +49,9 @@ public class ShowTest {
         Map<String, Object> context = new HashMap<String, Object>();
         context.put("user", new User("liangfei", "admin", "Y"));
         context.put("books", books);
-        BenchmarkCase[] cases = new BenchmarkCase[] { new BeetlCase(), new Smarty4jCase(), new FreemarkerCase(), new VelocityCase(), new HttlCase(), new JavaCase() };
+        Benchmark[] cases = new Benchmark[] { new Beetl(), new Smarty4j(), new Freemarker(), new Velocity(), new Httl(), new Java() };
         for (int i = 0; i < cases.length; i ++) {
-        	BenchmarkCase c = cases[i % cases.length];
+        	Benchmark c = cases[i % cases.length];
             String name = c.getClass().getSimpleName().replace("Case", "");
             StringWriter writer = new StringWriter();
             c.execute(1, "books", context, new DiscardWriter());
