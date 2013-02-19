@@ -61,7 +61,7 @@ public class BenchmarkTest {
 		for (int i = 0; i < names.length; i ++) {
 			String name = names[i];
 			max = Math.max(max, name.length());
-			cases[i] = (Benchmark) Class.forName("httl.test.cases." + name.substring(0, 1).toUpperCase() + name.substring(1) + "Case").newInstance();
+			cases[i] = (Benchmark) Class.forName("httl.test.engines." + name.substring(0, 1).toUpperCase() + name.substring(1)).newInstance();
 		}
 		System.out.println("====================test environment=====================");
 		System.out.println("os: " + System.getProperty("os.name") + " " + System.getProperty("os.version") + " "+ System.getProperty("os.arch")
