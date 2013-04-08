@@ -16,6 +16,7 @@
  */
 package httl.test.engines;
 
+import httl.internal.util.Version;
 import httl.test.Benchmark;
 
 import java.io.InputStreamReader;
@@ -27,6 +28,10 @@ import org.bee.tl.core.GroupTemplate;
 import org.bee.tl.core.Template;
 
 public class Beetl implements Benchmark {
+
+	public String getVersion() {
+		return Version.getVersion(GroupTemplate.class, "0.0.0");
+	}
 
 	public void execute(int times, String name, Map<String, Object> context, Object out) throws Exception {
 		name += ".btl";

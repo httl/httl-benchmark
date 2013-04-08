@@ -16,6 +16,7 @@
  */
 package httl.test.engines;
 
+import httl.internal.util.Version;
 import httl.test.Benchmark;
 
 import java.io.File;
@@ -35,7 +36,11 @@ import org.lilystudio.smarty4j.Engine;
 public class Smarty4j implements Benchmark {
 
 	private Engine engine = new Engine();
-	
+
+	public String getVersion() {
+		return Version.getVersion(Engine.class, "0.0.0");
+	}
+
 	public void execute(int times, String name, Map<String, Object> map, Object out) throws Exception {
 		name += ".st";
 		if (out instanceof OutputStream) {

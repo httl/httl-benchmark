@@ -30,7 +30,11 @@ import java.util.Map;
  * @author Liang Fei (liangfei0201 AT gmail DOT com)
  */
 public class Java implements Benchmark {
-	
+
+	public String getVersion() {
+		return System.getProperty("java.version");
+	}
+
 	public void execute(int times, String name, Map<String, Object> context, Object out) throws Exception {
 		if (out instanceof OutputStream) {
 			out = new OutputStreamWriter((OutputStream) out);

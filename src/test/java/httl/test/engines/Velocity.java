@@ -16,6 +16,7 @@
  */
 package httl.test.engines;
 
+import httl.internal.util.Version;
 import httl.test.Benchmark;
 import httl.test.util.DateTool;
 
@@ -43,6 +44,10 @@ public class Velocity implements Benchmark {
 		properties.put("classpath.resource.loader.class", "org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader");
 		properties.put("classpath.resource.loader.cache", "true");
 		engine = new VelocityEngine(properties);
+	}
+
+	public String getVersion() {
+		return Version.getVersion(VelocityEngine.class, "0.0.0");
 	}
 
 	public void execute(int times, String name, Map<String, Object> map, Object out) throws Exception {

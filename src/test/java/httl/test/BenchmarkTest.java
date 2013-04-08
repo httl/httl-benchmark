@@ -56,12 +56,15 @@ public class BenchmarkTest {
 		Map<String, Object> context = new HashMap<String, Object>();
 		context.put("user", new User("liangfei", "admin", "Y"));
 		context.put("books", books);
-		int max = 6;
+		int maxName = 6;
+		int maxVersion = 7;
 		Benchmark[] cases = new Benchmark[names.length];
 		for (int i = 0; i < names.length; i ++) {
 			String name = names[i];
-			max = Math.max(max, name.length());
+			maxName = Math.max(maxName, name.length());
 			cases[i] = (Benchmark) Class.forName("httl.test.engines." + name.substring(0, 1).toUpperCase() + name.substring(1)).newInstance();
+			String version = cases[i].getVersion();
+			maxVersion = Math.max(maxVersion, version.length());
 		}
 		System.out.println("====================test environment=====================");
 		System.out.println("os: " + System.getProperty("os.name") + " " + System.getProperty("os.version") + " "+ System.getProperty("os.arch")
@@ -74,7 +77,8 @@ public class BenchmarkTest {
 		System.out.println("count: " + count + ", warm: " + warm + ", list: " + list + ", stream: " + stream + ",\n"
 				+ "engines: " + engines);
 		System.out.println("====================test result==========================");
-		System.out.println(padding("engine", max) + ",  " + padding("time", width) + ",  " + padding("tps", 6) + ", " + padding("rate", 4) + ",");
+		System.out.println(padding("engine", maxName) + "," + padding("version", maxVersion) + ",  " 
+				+ padding("time", width) + ",  " + padding("tps", 6) + ", " + padding("rate", 4) + ",");
 		for (int i = 0; i < cases.length; i ++) {
 			cases[i].execute(warm, "/httl/test/templates/books", context, stream ? new DiscardOutputStream() : new DiscardWriter());
 		}
@@ -82,6 +86,7 @@ public class BenchmarkTest {
 		for (int i = 0; i < cases.length; i ++) {
 			String name = names[i];
 			Benchmark c = cases[i];
+			String version = c.getVersion();
 			Object out = stream ? new DiscardOutputStream() : new DiscardWriter();
 			long start = System.currentTimeMillis();
 			c.execute(count, "/httl/test/templates/books", context, out);
@@ -91,7 +96,8 @@ public class BenchmarkTest {
 				base = tps;
 			}
 			long ratio = base == 0 || tps == 0 ? 0 : 100 * tps / base;
-			System.out.println(padding(name.toLowerCase(), max) + "," 
+			System.out.println(padding(name.toLowerCase(), maxName) + ","
+					+ padding(version.toLowerCase(), maxVersion) + ","
 					+ padding(elapsed, width) + "ms,"
 					+ padding(tps, 6) + "/s,"
 					+ padding(ratio, 4) + "%,");

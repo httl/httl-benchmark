@@ -18,6 +18,7 @@ package httl.test.engines;
 
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.template.Configuration;
+import httl.internal.util.Version;
 import httl.test.Benchmark;
 
 import java.io.OutputStream;
@@ -31,6 +32,10 @@ import java.util.Map;
  * @author Liang Fei (liangfei0201 AT gmail DOT com)
  */
 public class Freemarker implements Benchmark {
+
+	public String getVersion() {
+		return Version.getVersion(Configuration.class, "0.0.0");
+	}
 
 	private Configuration configuration = new Configuration();
 

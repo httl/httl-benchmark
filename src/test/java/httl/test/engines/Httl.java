@@ -30,6 +30,10 @@ public class Httl implements Benchmark {
 
 	private Engine engine = Engine.getEngine();
 
+	public String getVersion() {
+		return engine.getVersion();
+	}
+
 	public void execute(int times, String name, Map<String, Object> context, Object out) throws Exception {
 		name += ".httl";
 		for (int i = times; i >= 0; i --) {
