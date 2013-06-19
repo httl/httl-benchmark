@@ -16,9 +16,9 @@
  */
 package httl.test.engines;
 
-import httl.internal.util.Version;
 import httl.test.Benchmark;
 import httl.test.util.DateTool;
+import httl.util.Version;
 
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;

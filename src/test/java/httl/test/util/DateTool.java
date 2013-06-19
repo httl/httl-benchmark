@@ -16,7 +16,7 @@
  */
 package httl.test.util;
 
-import httl.internal.util.DateUtils;
+import httl.util.DateUtils;
 
 import java.util.Date;
 

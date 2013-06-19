@@ -16,8 +16,8 @@
  */
 package httl.test.engines;
 
-import httl.internal.util.Version;
 import httl.test.Benchmark;
+import httl.util.Version;
 
 import java.io.File;
 import java.io.OutputStream;

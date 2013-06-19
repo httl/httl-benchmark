@@ -18,8 +18,8 @@ package httl.test.engines;
 
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.template.Configuration;
-import httl.internal.util.Version;
 import httl.test.Benchmark;
+import httl.util.Version;
 
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
