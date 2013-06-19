@@ -8,7 +8,7 @@
 	<packaging>jar</packaging>
 	<name>HTTL</name>
 	<description>Template Engine Benchmark.</description>
-	<url>http://httl.oskpi.com</url>
+	<url>http://httl.github.io</url>
 	<inceptionYear>2012</inceptionYear>
 	<licenses>
 		<license>
@@ -25,7 +25,7 @@
 		<dependency>
 			<groupId>httl</groupId>
 			<artifactId>httl</artifactId>
-			<version>1.0.9</version>
+			<version>1.0.10</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -81,11 +81,11 @@
 		<repository>
 			<id>httl-repository</id>
 			<name>Httl Repository</name>
-			<url>http://httl.github.com/maven</url>
+			<url>http://httl.github.io/maven</url>
 		</repository>
 	</repositories>
 	<scm>
-		<url>http://httl.oskpi.com</url>
+		<url>http://httl.github.io</url>
 		<connection>scm:git:https://github.com/httl/httl-benchmark.git</connection>
 		<developerConnection>scm:git:git@github.com:httl/httl-benchmark.git</developerConnection>
 	</scm>
