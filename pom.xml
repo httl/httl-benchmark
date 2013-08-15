@@ -6,7 +6,7 @@
 	<artifactId>httl-benchmark</artifactId>
 	<version>1.0.11</version>
 	<packaging>jar</packaging>
-	<name>HTTL</name>
+	<name>HTTL Benchmark</name>
 	<description>Template Engine Benchmark.</description>
 	<url>http://httl.github.io</url>
 	<inceptionYear>2012</inceptionYear>
@@ -23,7 +23,7 @@
 	</properties>
 	<dependencies>
 		<dependency>
-			<groupId>httl</groupId>
+			<groupId>com.github.httl</groupId>
 			<artifactId>httl</artifactId>
 			<version>1.0.11</version>
 			<scope>test</scope>
